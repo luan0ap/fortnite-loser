@@ -1,0 +1,25 @@
+{
+  "name": "fortnite-loser",
+  "version": "1.0.0",
+  "description": "Call a number when someone lose a Fortnite match.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pedrommone/fortnite-loser.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pedrommone/fortnite-loser/issues"
+  },
+  "homepage": "https://github.com/pedrommone/fortnite-loser#readme",
+  "dependencies": {
+    "dotenv": "^6.1.0",
+    "fortnite": "^4.1.1",
+    "redis": "^2.8.0",
+    "request": "^2.88.0"
+  }
+}
