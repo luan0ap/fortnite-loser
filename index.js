@@ -1,29 +1,12 @@
-const dotenv = require('dotenv'),
+const config = require('dotenv').config(),
     request = require('request'),
-    redis = require("redis");
+    cache = require("redis").createClient(process.env.REDIS_URL);
 
 const CACHE_KEY = 'fortnite-loses-count';
-
-const config = dotenv.config();
 
 if (config.error) {
     throw config.error;
 }
-
-const cache = redis.createClient({
-    host: process.env.REDIS_HOST,
-    password: process.env.REDIS_PASSWORD,
-    port: process.env.REDIS_PORT
-});
-
-const options = {
-    url: `https://api.fortnitetracker.com/v1/profile/${process.env.TARGET_PLATFORM}/${process.env.TARGET_USERNAME}`,
-    method: 'GET',
-    headers: {
-        'Accept': 'application/json',
-        'TRN-Api-Key': process.env.TRN_API_KEY
-    }
-};
 
 let getNumberOfLosses = function (response) {
     console.log('Processing total losses.');
@@ -58,6 +41,15 @@ let processRequestResponse = function (err, res, body) {
     let totalLosses = getNumberOfLosses(response);
 
     notifyTarget(totalLosses);
+};
+
+const options = {
+    url: `https://api.fortnitetracker.com/v1/profile/${process.env.TARGET_PLATFORM}/${process.env.TARGET_USERNAME}`,
+    method: 'GET',
+    headers: {
+        'Accept': 'application/json',
+        'TRN-Api-Key': process.env.TRN_API_KEY
+    }
 };
 
 request(options, processRequestResponse);
