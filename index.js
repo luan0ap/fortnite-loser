@@ -31,7 +31,6 @@ let notifyTarget = function (totalLooses) {
     });
 
     cache.set(CACHE_KEY, totalLooses);
-    cache.quit();
 };
 
 let processRequestResponse = function (err, res, body) {
@@ -52,4 +51,6 @@ const options = {
     }
 };
 
-request(options, processRequestResponse);
+let execute = () => request(options, processRequestResponse);
+
+setInterval(execute, 5000);
