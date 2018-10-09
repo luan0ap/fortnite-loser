@@ -24,6 +24,7 @@
     "dotenv": "^6.1.0",
     "fortnite": "^4.1.1",
     "redis": "^2.8.0",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "totalvoice-node": "^1.5.0"
   }
 }
