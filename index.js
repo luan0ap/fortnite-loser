@@ -23,6 +23,7 @@ let notify = function () {
 
 let notifyTarget = function (totalLooses) {
     console.log('Trying to notify user.');
+    console.log(`Current lost matches: ${totalLooses}.`);
 
     cache.get(CACHE_KEY, function (err, reply) {
         if (reply < totalLooses) {
