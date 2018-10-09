@@ -1,1 +1,1 @@
-scheduler: index.js
+scheduler: node index.js
