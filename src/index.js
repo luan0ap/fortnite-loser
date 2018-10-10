@@ -1,7 +1,10 @@
 const config = require('dotenv')
-const get = require('./utils/get')
 const cache = require("redis").createClient(process.env.REDIS_URL)
 const TotalVoice = require('totalvoice-node')
+
+const get = require('./utils/get')
+const randomize = require('./utils/randomize')
+const audios = require('./audios')
 
 const nickname = process.argv[2]
 const phoneNumber = process.argv[3]
@@ -13,21 +16,9 @@ const Caller = (nickname, phoneNumber) => {
 
     const getNumberOfLosses = ({ statistics }) => (statistics[7].value - statistics[8].value)
 
-    let randomizeAudio = function () {
-        let audios = [
-            'https://www.myinstants.com/media/sounds/cetemdemenciaringtone.mp3',
-            'https://www.myinstants.com/media/sounds/naofazmal.mp3',
-            'https://www.myinstants.com/media/sounds/vai-ganhar-vai-perder-perdeu-ganhoooou.mp3',
-            'https://www.myinstants.com/media/sounds/moises-nao-consegue-programa-do-silvio-santos.mp3'
-        ]
+    const call = function (audio) {
 
-        return audios[Math.floor(Math.random() * audios.length)]
-    }
-
-    let call = function (audio) {
-        console.log(`Sent audio: ${audio}.`)
-
-        totalVoiceClient.audio.enviar(process.env.TARGET_TELEPHONE, audio)
+        totalVoiceClient.audio.enviar(phoneNumber, audio)
             .then(function (data) {
                 console.log('Call has been scheduled.')
             })
@@ -36,30 +27,24 @@ const Caller = (nickname, phoneNumber) => {
             })
     }
 
-    let notify = function () {
-        console.log('Target has been notified!')
-
-        call(randomizeAudio())
+    const notify = function () {
+        call(randomize(audios))
     }
 
-    let notifyTarget = function (totalLooses) {
-        console.log('Trying to notify user.')
-        console.log(`Current lost matches: ${totalLooses}.`)
-
+    const notifyTarget = function (totalLooses) {
         cache.get(CACHE_KEY, function (err, reply) {
             if (reply < totalLooses) {
                 notify()
             }
         })
-
         cache.set(CACHE_KEY, totalLooses)
     }
 
-    let processRequestResponse = function (err, res, body) {
+    const processRequestResponse = function (err, res, body) {
         console.log('Request user data.')
 
-        let response = JSON.parse(body)
-        let totalLosses = getNumberOfLosses(response)
+        const response = JSON.parse(body)
+        const totalLosses = getNumberOfLosses(response)
 
         notifyTarget(totalLosses)
     }
