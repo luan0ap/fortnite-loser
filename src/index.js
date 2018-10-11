@@ -1,5 +1,5 @@
-const config = require('dotenv')
-const cache = require("redis").createClient(process.env.REDIS_URL)
+const config = require('dotenv').config()
+const cache = require('redis').createClient(process.env.REDIS_URL)
 const TotalVoice = require('totalvoice-node')
 
 const get = require('./utils/get')
