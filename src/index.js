@@ -5,7 +5,6 @@ const TotalVoice = require('totalvoice-node')
 const request = require('./utils/request')
 const randomize = require('./utils/randomize')
 const audios = require('./audios')
-const exit = require('./utils/exit')
 
 const nickname = process.argv[2]
 const phoneNumber = process.argv[3]
@@ -16,10 +15,13 @@ const Caller = (nickname = '', phoneNumber = 0) => {
     const getNumberOfLosses = ({ lifeTimeStats }) => (lifeTimeStats[7].value - lifeTimeStats[8].value)
 
     const call = audio => totalVoiceClient.audio.enviar(phoneNumber, audio)
-        .then(() => exit('Call has been scheduled.'))
-        .catch(() => exit('Failed to schedule call.'))
+        .then(() => console.log('Call has been scheduled.'))
+        .catch(() => console.log('Failed to schedule call.'))
 
-    const notify = () => call(randomize(audios))
+    const notify = () => setTimeout((audio) => {
+        call(audio)
+        notify()
+    }, 3000, randomize(audios))
 
     const notifyTarget = (totalLooses) => {
         cache.get(process.env.CACHE_KEY, function (err, reply) {
